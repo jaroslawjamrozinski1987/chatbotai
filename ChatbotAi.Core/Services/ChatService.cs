@@ -115,5 +115,15 @@ internal class ChatService(ChatDbContext chatDbContext, IChatReplyQueue replyQue
         return responses[rand.Next(responses.Length)];
     }
 
-   
+    public async Task<ChatResponse> GetResponse(Guid userMessageId)
+    {
+        var response = await chatDbContext.Messages.FirstOrDefaultAsync(a=>a.ParentMessageId == userMessageId && a.IsFromUser);
+
+        if(response is null)
+        {
+            return new ChatResponse(false, null);
+        }
+
+        return new ChatResponse(true, new ChatResponseBody(response.Id, response.Content));
+    }
 }

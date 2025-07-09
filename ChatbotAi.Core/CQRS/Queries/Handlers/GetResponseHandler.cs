@@ -30,6 +30,6 @@ internal class GetResponseHandler(IChatService chatService, ICacheService cacheS
         {
             return new ChatResponse(false, null);
         }
-        return await chatService.GenerateBotReplyAsync(request.messageId, cancellationToken);
+        return await chatService.GetResponse(request.messageId);
     }
 }

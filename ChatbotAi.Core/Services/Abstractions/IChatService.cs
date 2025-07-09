@@ -9,6 +9,8 @@ internal interface IChatService
 
     Task<ChatResponse> GenerateBotReplyAsync(Guid userMessageId, CancellationToken cancellationToken);
 
+    Task<ChatResponse> GetResponse(Guid userMessageId);
+
     Task SetRatingAsync(Guid messageId, byte rating);
 
     Task<List<ChatMessage>> GetChatHistoryAsync(DateTime dateFrom, DateTime dateTo, int count);
