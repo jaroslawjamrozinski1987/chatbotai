@@ -43,8 +43,7 @@ internal class ChatService(ChatDbContext chatDbContext, IChatReplyQueue replyQue
 
     public async Task<ChatResponse> GenerateBotReplyAsync(Guid userMessageId, CancellationToken cancellationToken)
     {      
-        var generatedText = await SimulateTypingAsync(
-            GetSimulatedBotResponse(), cancellationToken);
+        var generatedText = GetSimulatedBotResponse();
 
         var botMessage = new ChatMessage
         {
@@ -56,7 +55,7 @@ internal class ChatService(ChatDbContext chatDbContext, IChatReplyQueue replyQue
 
         chatDbContext.Messages.Add(botMessage);
         await chatDbContext.SaveChangesAsync();
-        return new ChatResponse(true, new ChatResponseBody(botMessage.Id, botMessage.Content));
+        return new ChatResponse(true, false, new ChatResponseBody(botMessage.Id, botMessage.Content));
     }
 
     public async Task SetRatingAsync(Guid messageId, byte rating)
@@ -117,13 +116,13 @@ internal class ChatService(ChatDbContext chatDbContext, IChatReplyQueue replyQue
 
     public async Task<ChatResponse> GetResponse(Guid userMessageId)
     {
-        var response = await chatDbContext.Messages.FirstOrDefaultAsync(a=>a.ParentMessageId == userMessageId && a.IsFromUser);
-
-        if(response is null)
+        var response = await chatDbContext.Messages.FirstOrDefaultAsync(a=>a.ParentMessageId == userMessageId && !a.IsFromUser);
+        var all = await chatDbContext.Messages.ToListAsync();
+        if (response is null)
         {
-            return new ChatResponse(false, null);
+            return new ChatResponse(false, false, null);
         }
 
-        return new ChatResponse(true, new ChatResponseBody(response.Id, response.Content));
+        return new ChatResponse(true, false, new ChatResponseBody(response.Id, response.Content));
     }
 }

@@ -19,6 +19,16 @@ public class Program
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<ErrorHandlingMiddleware>();
         builder.Services.AddCore(builder.Configuration);
+        const string CORS_POLICY = "AllowAll";
+        builder.Services.AddCors(o=>
+        {
+            o.AddPolicy(CORS_POLICY, a =>
+            {
+                a.AllowAnyOrigin()
+                 .AllowAnyMethod()
+                 .AllowAnyHeader();
+            });
+        });
 
         var app = builder.Build();
 
@@ -33,6 +43,7 @@ public class Program
 
         app.UseAuthorization();
         app.UseMiddleware<ErrorHandlingMiddleware>(Array.Empty<object>());
+        app.UseCors(CORS_POLICY);
         await app.Services.CreateDbAsync();
         await app.RunAsync();
     }

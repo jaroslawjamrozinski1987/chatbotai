@@ -20,11 +20,28 @@ internal class ChatReplyQueue : IChatReplyQueue
         }
     }
 
+    public async Task Clear()
+    {
+        await semaphoreSlim.WaitAsync();
+        try
+        {
+            queue.Clear();
+        }
+        finally
+        {
+            semaphoreSlim.Release();
+        }
+    }
+
     public async Task<ChatMessageDto?> DequeueMessage(CancellationToken cancellationToken)
     {
         await semaphoreSlim.WaitAsync();
         try
         {
+            if(queue.Count == 0)
+            {
+                return null;
+            }
             return queue.Dequeue();
         }
         finally

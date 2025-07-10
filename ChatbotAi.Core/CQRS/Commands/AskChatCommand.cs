@@ -2,4 +2,4 @@
 
 namespace ChatbotAi.Core.CQRS.Commands;
 
-public record AskChatCommand(string userInput) : INotification;
+public record AskChatCommand(string message) : INotification;

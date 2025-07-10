@@ -28,7 +28,7 @@ internal class GetResponseHandler(IChatService chatService, ICacheService cacheS
 
         if (!canContinue)
         {
-            return new ChatResponse(false, null);
+            return new ChatResponse(false, false, null);
         }
         return await chatService.GetResponse(request.messageId);
     }

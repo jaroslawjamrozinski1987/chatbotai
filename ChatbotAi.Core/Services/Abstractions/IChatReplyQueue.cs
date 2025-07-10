@@ -6,4 +6,5 @@ internal interface IChatReplyQueue
 {
     Task AddMessage(ChatMessageDto chatMessage);
     Task<ChatMessageDto?> DequeueMessage(CancellationToken cancellationToken);
+    Task Clear();
 }

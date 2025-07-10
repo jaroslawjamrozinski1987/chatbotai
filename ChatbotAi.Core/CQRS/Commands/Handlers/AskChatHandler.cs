@@ -8,7 +8,7 @@ internal class AskChatHandler(IChatService chatService, IItemStorage itemStorage
 {
     public async Task Handle(AskChatCommand request, CancellationToken cancellationToken)
     {
-        var result = await chatService.AddUserMessageAsync(request.userInput);
+        var result = await chatService.AddUserMessageAsync(request.message);
         itemStorage.Set<Guid>(ResultConsts.ResultKey, result);
     }
 }

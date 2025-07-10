@@ -42,5 +42,13 @@ public static class Extensions
             var history = await mediator.Send(getHistoryQuery);
             return Results.Ok(history);
         });
+
+        app.MapPost("/chat/cancel", async (
+    [FromServices] IMediator mediator,
+    CancellationToken cancellationToken) =>
+        {
+            await mediator.Publish(new CancelCommand(), cancellationToken);
+            return Results.Ok();
+        });
     }
 }
